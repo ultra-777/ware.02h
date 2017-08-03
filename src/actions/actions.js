@@ -1,4 +1,4 @@
-import Actions from './action-types';
+import Actions from './types';
 
 /*
 export function loadSurvey(id, isTest) {
@@ -43,6 +43,13 @@ export function navigate(url, method, content) {
         url,
         method
     }
+}
+
+export function filterTable(filter) {
+	return {
+		type: Actions.FILTER,
+		filter
+	};
 }
 
 

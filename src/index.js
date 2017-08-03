@@ -1,36 +1,29 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Form, Text } from 'react-form';
-import * as PropTypes from 'prop-types';
+import { render } from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
+import { configureStore, history } from './store/configure-store';
+import Root from './containers/root';
 
-const myForm = (
-	<Form
-		onSubmit={(values) => {
-			console.log('Success!', values)
-		}}
-		validate={({ name }) => {
-			return {
-				name: !name ? 'A name is required' : undefined
-			}
-		}}>
-{({submitForm}) => {
-	return (
-		<form onSubmit={submitForm}>
-		<Text field='name' />
-		<button type='submit'>Submit</button>
-		</form>
-)
-}}
-</Form>
-)
+const store = configureStore();
 
+render(
+	<AppContainer>
+		<Root store={store} history={history} />
+	</AppContainer>,
+	document.getElementById('root')
+);
 
-class App extends React.Component {
-	render() {
-		return (<h1>Cheers 2</h1>);
-	}
+if (module.hot) {
+	module.hot.accept('./containers/root', () => {
+		const newConfigureStore = require('./store/configure-store');
+		const newStore = newConfigureStore.configureStore();
+		const newHistory = newConfigureStore.history;
+		const NewRoot = require('./containers/root').default;
+		render(
+			<AppContainer>
+				<NewRoot store={newStore} history={newHistory} />
+			</AppContainer>,
+			document.getElementById('root')
+		);
+	});
 }
-
-const app = document.getElementById('app');
-
-ReactDOM.render(<App />, app);
